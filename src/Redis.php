@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Extend;
+namespace Scpzc\Tools;
 
 use Illuminate\Support\Facades\Redis as LaravelRedis;
 

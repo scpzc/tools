@@ -2,12 +2,11 @@
 /**
  * 数据库操作类
  * Created by PhpStorm.
- * User: panzhaochao
  * Date: 2019/10/26
  * Time: 15:55
  */
 
-namespace App\Extend;
+namespace Scpzc\Tools;
 
 class Db
 {
