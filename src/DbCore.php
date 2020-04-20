@@ -218,7 +218,7 @@ class DbCore
      *
      * @return $this
      */
-    private function data($data){
+    public function data($data){
         if(empty($data)) return $this;   //没有数据
         $set = [];    //更新操作
         $insertFields = [];   //添加操作

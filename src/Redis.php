@@ -2,146 +2,176 @@
 
 namespace Scpzc\Tools;
 
-use Illuminate\Support\Facades\Redis as Predis;
+
+/**
+ * @method static int    del(array $keys)
+ * @method static string dump($key)
+ * @method static int    exists($key)
+ * @method static int    expire($key, $seconds)
+ * @method static int    expireat($key, $timestamp)
+ * @method static array  keys($pattern)
+ * @method static int    move($key, $db)
+ * @method static mixed  object($subcommand, $key)
+ * @method static int    persist($key)
+ * @method static int    pexpire($key, $milliseconds)
+ * @method static int    pexpireat($key, $timestamp)
+ * @method static int    pttl($key)
+ * @method static string randomkey()
+ * @method static mixed  rename($key, $target)
+ * @method static int    renamenx($key, $target)
+ * @method static array  scan($cursor, array $options = null)
+ * @method static array  sort($key, array $options = null)
+ * @method static int    ttl($key)
+ * @method static mixed  type($key)
+ * @method static int    append($key, $value)
+ * @method static int    bitcount($key, $start = null, $end = null)
+ * @method static int    bitop($operation, $destkey, $key)
+ * @method static array  bitfield($key, $subcommand, ...$subcommandArg)
+ * @method static int    decr($key, $decrement = 1,$expireSeconds = null)
+ * @method static int    decrby($key, $decrement)
+ * @method static string get($key)
+ * @method static int    getbit($key, $offset)
+ * @method static string getrange($key, $start, $end)
+ * @method static string getset($key, $value)
+ * @method static int    incr($key, $increment = 1,$expireSeconds = null)
+ * @method static int    incrby($key, $increment)
+ * @method static string incrbyfloat($key, $increment)
+ * @method static array  mget(array $keys)
+ * @method static mixed  mset(array $dictionary)
+ * @method static int    msetnx(array $dictionary)
+ * @method static mixed  psetex($key, $milliseconds, $value)
+ * @method static mixed  set($key, $value,$expireSeconds = null)
+ * @method static int    setbit($key, $offset, $value)
+ * @method static int    setex($key, $seconds, $value)
+ * @method static int    setnx($key, $value)
+ * @method static int    setrange($key, $offset, $value)
+ * @method static int    strlen($key)
+ * @method static int    hdel($key, array $fields)
+ * @method static int    hexists($key, $field)
+ * @method static string hget($key, $field)
+ * @method static array  hgetall($key)
+ * @method static int    hincrby($key, $field, $increment)
+ * @method static string hincrbyfloat($key, $field, $increment)
+ * @method static array  hkeys($key)
+ * @method static int    hlen($key)
+ * @method static array  hmget($key, array $fields)
+ * @method static mixed  hmset($key, array $dictionary)
+ * @method static array  hscan($key, $cursor, array $options = null)
+ * @method static int    hset($key, $field, $value)
+ * @method static int    hsetnx($key, $field, $value)
+ * @method static array  hvals($key)
+ * @method static int    hstrlen($key, $field)
+ * @method static array  blpop(array $keys, $timeout)
+ * @method static array  brpop(array $keys, $timeout)
+ * @method static array  brpoplpush($source, $destination, $timeout)
+ * @method static string lindex($key, $index)
+ * @method static int    linsert($key, $whence, $pivot, $value)
+ * @method static int    llen($key)
+ * @method static string lpop($key)
+ * @method static int    lpush($key, array $values)
+ * @method static int    lpushx($key, $value)
+ * @method static array  lrange($key, $start, $stop)
+ * @method static int    lrem($key, $count, $value)
+ * @method static mixed  lset($key, $index, $value)
+ * @method static mixed  ltrim($key, $start, $stop)
+ * @method static string rpop($key)
+ * @method static string rpoplpush($source, $destination)
+ * @method static int    rpush($key, array $values)
+ * @method static int    rpushx($key, $value)
+ * @method static int    sadd($key, array $members)
+ * @method static int    scard($key)
+ * @method static array  sdiff(array $keys)
+ * @method static int    sdiffstore($destination, array $keys)
+ * @method static array  sinter(array $keys)
+ * @method static int    sinterstore($destination, array $keys)
+ * @method static int    sismember($key, $member)
+ * @method static array  smembers($key)
+ * @method static int    smove($source, $destination, $member)
+ * @method static string spop($key, $count = null)
+ * @method static string srandmember($key, $count = null)
+ * @method static int    srem($key, $member)
+ * @method static array  sscan($key, $cursor, array $options = null)
+ * @method static array  sunion(array $keys)
+ * @method static int    sunionstore($destination, array $keys)
+ * @method static int    zadd($key, array $membersAndScoresDictionary)
+ * @method static int    zcard($key)
+ * @method static string zcount($key, $min, $max)
+ * @method static string zincrby($key, $increment, $member)
+ * @method static int    zinterstore($destination, array $keys, array $options = null)
+ * @method static array  zrange($key, $start, $stop, array $options = null)
+ * @method static array  zrangebyscore($key, $min, $max, array $options = null)
+ * @method static int    zrank($key, $member)
+ * @method static int    zrem($key, $member)
+ * @method static int    zremrangebyrank($key, $start, $stop)
+ * @method static int    zremrangebyscore($key, $min, $max)
+ * @method static array  zrevrange($key, $start, $stop, array $options = null)
+ * @method static array  zrevrangebyscore($key, $max, $min, array $options = null)
+ * @method static int    zrevrank($key, $member)
+ * @method static int    zunionstore($destination, array $keys, array $options = null)
+ * @method static string zscore($key, $member)
+ * @method static array  zscan($key, $cursor, array $options = null)
+ * @method static array  zrangebylex($key, $start, $stop, array $options = null)
+ * @method static array  zrevrangebylex($key, $start, $stop, array $options = null)
+ * @method static int    zremrangebylex($key, $min, $max)
+ * @method static int    zlexcount($key, $min, $max)
+ * @method static int    pfadd($key, array $elements)
+ * @method static mixed  pfmerge($destinationKey, array $sourceKeys)
+ * @method static int    pfcount(array $keys)
+ * @method static mixed  pubsub($subcommand, $argument)
+ * @method static int    publish($channel, $message)
+ * @method static mixed  discard()
+ * @method static array  exec()
+ * @method static mixed  multi()
+ * @method static mixed  unwatch()
+ * @method static mixed  watch($key)
+ * @method static mixed  eval($script, $numkeys, $keyOrArg1 = null, $keyOrArgN = null)
+ * @method static mixed  evalsha($script, $numkeys, $keyOrArg1 = null, $keyOrArgN = null)
+ * @method static mixed  script($subcommand, $argument = null)
+ * @method static mixed  auth($password)
+ * @method static string echo($message)
+ * @method static mixed  ping($message = null)
+ * @method static mixed  select($database)
+ * @method static mixed  bgrewriteaof()
+ * @method static mixed  bgsave()
+ * @method static mixed  client($subcommand, $argument = null)
+ * @method static mixed  config($subcommand, $argument = null)
+ * @method static int    dbsize()
+ * @method static mixed  flushall()
+ * @method static mixed  flushdb()
+ * @method static array  info($section = null)
+ * @method static int    lastsave()
+ * @method static mixed  save()
+ * @method static mixed  slaveof($host, $port)
+ * @method static mixed  slowlog($subcommand, $argument = null)
+ * @method static array  time()
+ * @method static array  command()
+ * @method static int    geoadd($key, $longitude, $latitude, $member)
+ * @method static array  geohash($key, array $members)
+ * @method static array  geopos($key, array $members)
+ * @method static string geodist($key, $member1, $member2, $unit = null)
+ * @method static array  georadius($key, $longitude, $latitude, $radius, $unit, array $options = null)
+ * @method static array  georadiusbymember($key, $member, $radius, $unit, array $options = null)
+ * @method static RedisCore connect(string $connectName = null)
+ */
 
 class Redis
 {
-    public static $redisConnection = null;   //redis连接库
-
     /**
-     * 使用哪个配置
-     * author: panzhaochao
-     * date: 2020-04-19 22:15
-     */
-    public static function connection($redisConfig = 'default'){
-        self::$redisConnection = Predis::connection($redisConfig);
-    }
-
-    /**
-     * 设置string类型缓存
-     * date: 2019-08-25 19:05
+     * Handle dynamic, static calls to the object.
      *
-     * @param      $key     //缓存变量名
-     * @param      $value   //缓存数据
-     * @param bool $expireSeconds  //过期时间（秒）
-     *
+     * @param  string  $method
+     * @param  array   $args
      * @return mixed
-     */
-    public static function set($key, $value, $expireSeconds = null)
-    {
-        // 对数组/对象数据进行缓存处理，保证数据完整性
-        $value = (is_object($value) || is_array($value)) ? json_encode($value,JSON_UNESCAPED_UNICODE) : $value;
-        if ($expireSeconds === null) {
-            $result = Predis::set($key, $value);
-        } else {
-            $result = Predis::setex($key, $expireSeconds, $value);
-        }
-        return $result;
-    }
-
-    /**
-     * 获取string数据类型缓存
      *
-     * @param string $key 缓存变量名
-     * @return mixed
+     * @throws \RuntimeException
      */
-    public static function get($key)
+    public static function __callStatic($method, $args)
     {
-        $value = Predis::get($key);
-        $jsonValue = json_decode($value,true);
-        if(!is_null($jsonValue)){
-            $value = $jsonValue;
-        }
-        return $value;
-    }
-
-    /**
-     * 获取key的过期时间，单位秒
-     *
-     * @param string $key 缓存变量名
-     * @return mixed
-     */
-    public static function ttl($key)
-    {
-        return Predis::ttl($key);
-    }
-
-
-    /**
-     * 设置key的过期时间，单位秒
-     *
-     * @param string $key 缓存变量名
-     * @param string $seconds 过期时间，单位秒
-     * @return mixed
-     */
-    public static function expire($key, $expireSeconds)
-    {
-        return Predis::expire($key, $expireSeconds);
-    }
-
-
-
-    /**
-     * 加锁
-     *
-     * @param string $key 缓存变量名
-     * @param string $value 缓存数据
-     * @return mixed
-     */
-    public static function setnx($key, $value, $expireSeconds = null)
-    {
-        if($expireSeconds === null){
-            $result = Predis::setnx($key, $value);
+        if($method == 'connect'){
+            return RedisCore::connect(...$args);
         }else{
-            $result = Predis::set($key, $value, 'ex', $expireSeconds, 'nx');
+            $redis = RedisCore::connect();
+            return $redis->$method(...$args);
         }
-        return $result;
     }
-
-    /**
-     * string数据类型值加加操作,类似 ++$i ,如果 key 不存在时自动设置为 0 后进行加加操作
-     *
-     * @param string $key 缓存变量名
-     * @param int $offset 一次性加多少，默认1
-     * @return int
-     */
-    public static function incr($key, $offset = 1, $expireSeconds = null)
-    {
-        $result = Predis::incrBy($key, $offset);
-        if ($expireSeconds !== null) {
-            Predis::expire($key, $expireSeconds);
-        }
-        return $result;
-    }
-
-    /**
-     * string数据类型值减减操作,类似 --$i ,如果 key 不存在时自动设置为 0 后进行减减操作
-     *
-     * @param string $key 缓存变量名
-     * @param int $offset 一次性减多少,默认1
-     * @return int
-     */
-    public static function decr($key, $offset = 1, $expireSeconds = null)
-    {
-        $result = Predis::decrBy($key, $offset);
-        if ($expireSeconds !== null) {
-            Predis::expire($key, $expireSeconds);
-        }
-        return $result;
-    }
-
-    /**
-     * 删除string数据类型$key的缓存
-     *
-     * @param string || array $key 缓存KEY，支持单个健:"key1" 或多个健:array('key1','key2')
-     * @return boolean
-     */
-    public static function del($key)
-    {
-        return Predis::del($key);
-    }
-
-
-
-
 }
