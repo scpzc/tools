@@ -2,15 +2,20 @@
 
 namespace Scpzc\Tools;
 
-use Illuminate\Support\Facades\Redis as LaravelRedis;
+use Illuminate\Support\Facades\Redis as Predis;
 
-/**
- * Class Redis
- *
- * @package App\Extend
- */
 class Redis
 {
+    public static $redisConnection = null;   //redis连接库
+
+    /**
+     * 使用哪个配置
+     * author: panzhaochao
+     * date: 2020-04-19 22:15
+     */
+    public static function connection($redisConfig = 'default'){
+        self::$redisConnection = Predis::connection($redisConfig);
+    }
 
     /**
      * 设置string类型缓存
@@ -27,9 +32,9 @@ class Redis
         // 对数组/对象数据进行缓存处理，保证数据完整性
         $value = (is_object($value) || is_array($value)) ? json_encode($value,JSON_UNESCAPED_UNICODE) : $value;
         if ($expireSeconds === null) {
-            $result = LaravelRedis::set($key, $value);
+            $result = Predis::set($key, $value);
         } else {
-            $result = LaravelRedis::setex($key, $expireSeconds, $value);
+            $result = Predis::setex($key, $expireSeconds, $value);
         }
         return $result;
     }
@@ -42,7 +47,7 @@ class Redis
      */
     public static function get($key)
     {
-        $value = LaravelRedis::get($key);
+        $value = Predis::get($key);
         $jsonValue = json_decode($value,true);
         if(!is_null($jsonValue)){
             $value = $jsonValue;
@@ -58,7 +63,7 @@ class Redis
      */
     public static function ttl($key)
     {
-        return LaravelRedis::ttl($key);
+        return Predis::ttl($key);
     }
 
 
@@ -71,7 +76,7 @@ class Redis
      */
     public static function expire($key, $expireSeconds)
     {
-        return LaravelRedis::expire($key, $expireSeconds);
+        return Predis::expire($key, $expireSeconds);
     }
 
 
@@ -86,9 +91,9 @@ class Redis
     public static function setnx($key, $value, $expireSeconds = null)
     {
         if($expireSeconds === null){
-            $result = LaravelRedis::setnx($key, $value);
+            $result = Predis::setnx($key, $value);
         }else{
-            $result = LaravelRedis::set($key, $value, 'ex', $expireSeconds, 'nx');
+            $result = Predis::set($key, $value, 'ex', $expireSeconds, 'nx');
         }
         return $result;
     }
@@ -102,9 +107,9 @@ class Redis
      */
     public static function incr($key, $offset = 1, $expireSeconds = null)
     {
-        $result = LaravelRedis::incrBy($key, $offset);
+        $result = Predis::incrBy($key, $offset);
         if ($expireSeconds !== null) {
-            LaravelRedis::expire($key, $expireSeconds);
+            Predis::expire($key, $expireSeconds);
         }
         return $result;
     }
@@ -118,9 +123,9 @@ class Redis
      */
     public static function decr($key, $offset = 1, $expireSeconds = null)
     {
-        $result = LaravelRedis::decrBy($key, $offset);
+        $result = Predis::decrBy($key, $offset);
         if ($expireSeconds !== null) {
-            LaravelRedis::expire($key, $expireSeconds);
+            Predis::expire($key, $expireSeconds);
         }
         return $result;
     }
@@ -133,7 +138,7 @@ class Redis
      */
     public static function del($key)
     {
-        return LaravelRedis::del($key);
+        return Predis::del($key);
     }
 
 

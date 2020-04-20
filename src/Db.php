@@ -10,8 +10,9 @@ namespace Scpzc\Tools;
 
 
 /**
- * @method static DbCore fetchRow(string $name = null)
- * @method static DbCore connect(string $connect = null)
+ * @method static mixed fetchAll($sql='',$params=[])
+ * @method static mixed fetchRow($sql = '',$params = [])
+ * @method static DbCore connect(string $connectName = null)
  * @method static DbCore table(string $query)
  */
 
@@ -29,9 +30,12 @@ class Db
      */
     public static function __callStatic($method, $args)
     {
-
-        $db = DbCore::connect();
-        return $db->$method(...$args);
+        if($method == 'connect'){
+            return DbCore::connect(...$args);
+        }else{
+            $db = DbCore::connect();
+            return $db->$method(...$args);
+        }
     }
 
 

@@ -323,7 +323,7 @@ class DbCore
      *
      * @return mixed
      */
-    private function fetchAll($sql='',$params=[]){
+    public function fetchAll($sql='',$params=[]){
         if(!empty($sql)){
             if (
                 strpos(trim(strtolower($sql)), 'insert') === 0 ||
@@ -353,7 +353,7 @@ class DbCore
      *
      * @return mixed
      */
-    private function count($sql = '',$params = []){
+    public function count($sql = '',$params = []){
         if(!empty($sql)){
             if (
                 strpos(trim(strtolower($sql)), 'insert') === 0 ||
@@ -566,16 +566,4 @@ class DbCore
 
 
 
-    /**
-     * Handle dynamic, calls to the object.
-     *
-     * @param  string  $method
-     * @param  array   $args
-     * @return mixed
-     *
-     * @throws \RuntimeException
-     */
-    public function __call ($method, $args){
-        return $this->$method(...$args);
-    }
 }
