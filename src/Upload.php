@@ -11,7 +11,6 @@ class Upload
     private $allowed_types = array('jpeg', 'jpg', 'png', 'gif');//允许上传的文件
     private $max_size = 1;//单位M
     private $field = '';  //上传表单file的name
-    public $error_info = '';  //错误消息
     private $show_sub = 1;    //子目录 默认2016/5/2
 
     public function __construct($config = array())

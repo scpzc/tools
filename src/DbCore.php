@@ -254,60 +254,57 @@ class DbCore
         return $this;
     }
 
+
     /**
      * 获取单个值，可以使用原生
      * author: panzhaochao
-     * date: 2019/5/21 22:41
+     * date: 2020-04-21 22:51
      *
-     * @param string $sql
-     * @param        $params
+     * @param string $sqlOrWhere
+     * @param array  $params
      *
-     * @return mixed
+     * @return array|bool|mixed
+     * @throws \Exception
      */
-    public function fetchOne($sql = '',$params = []){
-        if(!empty($sql)){
-            if (
-                strpos(trim(strtolower($sql)), 'insert') === 0 ||
-                strpos(trim(strtolower($sql)), 'update') === 0 ||
-                strpos(trim(strtolower($sql)), 'delete') === 0
-            ) {
-                throw new \Exception('请使用execute');
-            }
-            $this->sqlParams[] = ['sql'=>$sql,'params'=>$params];
-            $result = $this->db->selectOne($sql,$params);
-        }else{
-            $this->sql = 'SELECT'.$this->container['field'].'FROM'.$this->container['table'].$this->container['where'].$this->container['order_by'].' LIMIT 1';
-            $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
-            $result = $this->db->selectOne($this->sql,$this->params);
-        }
-        $this->resetParams();
-        $result = $this->objectToArray($result);
-        $result = is_array($result)?array_pop($result):null;
+    public function fetchOne($sqlOrWhere = '',$params = []){
+        $result = $this->fetchRow($sqlOrWhere,$params);
+        $result = is_array($result)?array_shift($result):null;
         return $result;
     }
+
 
     /**
      * 查询一条记录，可以使用原生
      * author: panzhaochao
-     * date: 2019/5/21 21:13
+     * date: 2020-04-21 22:51
      *
-     * @return mixed
+     * @param string $sqlOrWhere
+     * @param array  $params
+     *
+     * @return array|bool|mixed
+     * @throws \Exception
      */
-    public  function fetchRow($sql = '',$params = []){
-        if(!empty($sql)){
-            if (
-                strpos(trim(strtolower($sql)), 'insert') === 0 ||
-                strpos(trim(strtolower($sql)), 'update') === 0 ||
-                strpos(trim(strtolower($sql)), 'delete') === 0
-            ) {
-                throw new \Exception('请使用execute');
-            }
-            $this->sqlParams[] = ['sql'=>$sql,'params'=>$params];
-            $result = $this->db->selectOne($sql,$params);
-        }else{
+    public  function fetchRow($sqlOrWhere = '',$params = []){
+        //没有sqlOrWhere或者为数组表示where条件
+        if(empty($sqlOrWhere) || is_array($sqlOrWhere)){
+            $this->where($sqlOrWhere,$params);
             $this->sql = 'SELECT'.$this->container['field'].'FROM'.$this->container['table'].$this->container['where'].$this->container['order_by'].' LIMIT 1';
             $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
             $result = $this->db->selectOne($this->sql,$this->params);
+        }else{
+            if(is_array($sqlOrWhere)){
+                $this->where($sqlOrWhere,$params);
+            }else{
+                if (
+                    strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
+                    strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
+                    strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
+                ) {
+                    throw new \Exception('请使用execute');
+                }
+                $this->sqlParams[] = ['sql'=>$sqlOrWhere,'params'=>$params];
+                $result = $this->db->selectOne($sqlOrWhere,$params);
+            }
         }
         $this->resetParams();
         $result = $this->objectToArray($result);
@@ -319,75 +316,79 @@ class DbCore
     /**
      * 查询符合条件的所有记录，可以使用原生
      * author: panzhaochao
-     * date: 2019/5/21 22:01
+     * date: 2020-04-21 22:51
      *
-     * @return mixed
+     * @param string $sqlOrWhere
+     * @param array  $params
+     *
+     * @return array|bool|mixed
+     * @throws \Exception
      */
-    public function fetchAll($sql='',$params=[]){
-        if(!empty($sql)){
-            if (
-                strpos(trim(strtolower($sql)), 'insert') === 0 ||
-                strpos(trim(strtolower($sql)), 'update') === 0 ||
-                strpos(trim(strtolower($sql)), 'delete') === 0
-            ) {
-                throw new \Exception('请使用execute');
-            }
-            $this->sqlParams[] = ['sql'=>$sql,'params'=>$params];
-            $result = $this->execute($sql,$params);
-        }else{
+    public function fetchAll($sqlOrWhere='',$params=[]){
+        //没有sqlOrWhere或者为数组表示where条件
+        if(empty($sqlOrWhere) || is_array($sqlOrWhere)){
+            $this->where($sqlOrWhere,$params);
             $this->sql = 'SELECT '.$this->container['field'].' FROM '.$this->container['table'].$this->container['where'].$this->container['order_by'].$this->container['limit'];
             $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
             $result = $this->execute($this->sql,$this->params);
+        }else{
+            if(is_array($sqlOrWhere)){
+                $this->where($sqlOrWhere,$params);
+            }else{
+                if (
+                    strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
+                    strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
+                    strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
+                ) {
+                    throw new \Exception('请使用execute');
+                }
+                $this->sqlParams[] = ['sql'=>$sqlOrWhere,'params'=>$params];
+                $result = $this->execute($sqlOrWhere,$params);
+            }
         }
         $this->resetParams();
         return $result;
     }
 
+
+
     /**
-     * 获取总数
+     * 获取总数，可以使用原生
      * author: panzhaochao
-     * date: 2019/5/21 22:41
+     * date: 2020-04-21 22:51
      *
-     * @param string $sql
-     * @param        $params
+     * @param string $sqlOrWhere
+     * @param array  $params
      *
-     * @return mixed
+     * @return array|bool|mixed
+     * @throws \Exception
      */
-    public function count($sql = '',$params = []){
-        if(!empty($sql)){
-            if (
-                strpos(trim(strtolower($sql)), 'insert') === 0 ||
-                strpos(trim(strtolower($sql)), 'update') === 0 ||
-                strpos(trim(strtolower($sql)), 'delete') === 0
-            ) {
-                throw new \Exception('请使用execute');
-            }
-            $this->sqlParams[] = ['sql'=>$sql,'params'=>$params];
-            $result = $this->db->selectOne($sql,$params);
-        }else{
+    public function count($sqlOrWhere='',$params=[]){
+        //没有sqlOrWhere或者为数组表示where条件
+        if(empty($sqlOrWhere) || is_array($sqlOrWhere)){
+            $this->where($sqlOrWhere,$params);
             $this->sql = 'SELECT count(*) FROM'.$this->container['table'].$this->container['where'].' LIMIT 1';
             $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
             $result = $this->db->selectOne($this->sql,$this->params);
+        }else{
+            if(is_array($sqlOrWhere)){
+                $this->where($sqlOrWhere,$params);
+            }else{
+                if (
+                    strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
+                    strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
+                    strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
+                ) {
+                    throw new \Exception('请使用execute');
+                }
+                $this->sqlParams[] = ['sql'=>$sqlOrWhere,'params'=>$params];
+                $result = $this->db->selectOne($sqlOrWhere,$params);
+            }
         }
         $this->resetParams();
         $result = $this->objectToArray($result);
         $result = array_pop($result);
         return $result;
-    }
-
-    /**
-     * 分页查询
-     * author: panzhaochao
-     * date: 2019/5/21 22:30
-     *
-     * @param array  $pageSize
-     *
-     * @return mixed
-     */
-    public function page($pageSize){
-        $result = $this->queryBuild()->paginate($pageSize);
-        unset($this->container);
-        return $this->objectToArray($result);
     }
 
 
@@ -478,7 +479,7 @@ class DbCore
      * 执行原生SQL
      *
      * @param string $sql  SQL语句
-     * @param array  $argv SQL参数
+     * @param array  $params SQL参数
      *
      * @return mixed
      */
@@ -513,11 +514,11 @@ class DbCore
 
 
     /**
-     * 查询sql语句
+     * 查询执行的SQL和参数
      * author: panzhaochao
      * date: 2019/5/22 9:59
      */
-    private function getSql(){
+    public function getSql(){
         return $this->sqlParams;
     }
 
@@ -527,7 +528,7 @@ class DbCore
      * author: panzhaochao
      * date: 2019/5/22 10:02
      */
-    private function startTrans(){
+    public function startTrans(){
         $this->sqlParams[] = ['sql'=>'begin transaction'];
         $this->db->beginTransaction();
     }
@@ -537,7 +538,7 @@ class DbCore
      * author: panzhaochao
      * date: 2019/5/22 10:02
      */
-    private function commit(){
+    public function commit(){
         $this->sqlParams[] = ['sql'=>'commit'];
         $this->db->commit();
     }
@@ -551,6 +552,7 @@ class DbCore
         $this->sqlParams[] = ['sql'=>'rollback'];
         $this->db->rollBack();
     }
+
     /**
      * 对象转化成数组
      * author: panzhaochao
