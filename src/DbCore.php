@@ -483,7 +483,7 @@ class DbCore
      *
      * @return mixed
      */
-    private function execute(string $sql = null, array $params = [])
+    public function execute(string $sql = null, array $params = [])
     {
         $sql = trim($sql);
         $sqlArray = explode(' ', $sql);
