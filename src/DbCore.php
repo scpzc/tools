@@ -410,7 +410,7 @@ class DbCore
             $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
             $result = $this->execute($this->sql,$this->params);
         }catch(\Throwable $e){
-            Log::write(exceptionMessage($e));   //写入错误日志表
+            handleException($e);   //写入错误日志表
             report($e);   //写入日志文件
             $result = 0;
         }
@@ -435,7 +435,7 @@ class DbCore
             $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
             $result = $this->execute($this->sql,$this->params);
         }catch(\Throwable $e){
-            Log::write(exceptionMessage($e));   //写入错误日志表
+            handleException($e);   //写入错误日志表
             report($e);   //写入日志文件
             $result = 0;
         }
@@ -465,7 +465,7 @@ class DbCore
             $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
             $result = $this->execute($this->sql,$this->params);
         }catch(\Throwable $e){
-            Log::write(exceptionMessage($e));   //写入错误日志表
+            handleException($e);   //写入错误日志表
             report($e);   //写入日志文件
             $result = 0;
         }
