@@ -76,7 +76,7 @@ namespace Scpzc\Tools;
  * @method static mixed  ltrim($key, $start, $stop)
  * @method static string rpop($key)
  * @method static string rpoplpush($source, $destination)
- * @method static int    rpush($key, array $values)
+ * @method static int    rpush($key, $values)
  * @method static int    rpushx($key, $value)
  * @method static int    sadd($key, array $members)
  * @method static int    scard($key)
