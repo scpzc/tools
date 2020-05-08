@@ -10,9 +10,11 @@ namespace Scpzc\Tools;
 
 
 /**
- * @method static mixed fetchAll($sql='',$params=[])
+ *
+ * @method static mixed fetchOne($sqlOrWhere = [], $params = [], $fields = '')
+ * @method static mixed fetchRow($sqlOrWhere = [], $params = [], $fields = '')
+ * @method static mixed fetchAll($sqlOrWhere = [], $params = [], $fields = '')
  * @method static mixed getSql()
- * @method static mixed fetchRow($sql = '',$params = [])
  * @method static DbCore connect(string $connectName = null)
  * @method static DbCore table(string $query)
  * @method static mixed startTrans()
