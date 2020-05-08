@@ -100,9 +100,10 @@ class DbCore
      * @return $this
      */
     public function field($field = ' * '){
-        if(is_array($field)){
+        if(is_array($field) && !empty($field)){
             $field = ' '.join(',',$field).' ';
         }
+        $field = !empty($field) ? $field : '*';
         $this->container['field'] = ' '.$field.' ';
         return $this;
     }
@@ -260,14 +261,14 @@ class DbCore
      * author: panzhaochao
      * date: 2020-04-21 22:51
      *
-     * @param string $sqlOrWhere
+     * @param array $sqlOrWhere
      * @param array  $params
      *
      * @return array|bool|mixed
      * @throws \Exception
      */
-    public function fetchOne($sqlOrWhere = '',$params = []){
-        $result = $this->fetchRow($sqlOrWhere,$params);
+    public function fetchOne($sqlOrWhere = [], $params = [], $fields = ''){
+        $result = $this->fetchRow($sqlOrWhere,$params,$fields);
         $result = is_array($result)?array_shift($result):null;
         return $result;
     }
@@ -278,34 +279,36 @@ class DbCore
      * author: panzhaochao
      * date: 2020-04-21 22:51
      *
-     * @param string $sqlOrWhere
+     * @param array $sqlOrWhere
      * @param array  $params
      *
      * @return array|bool|mixed
      * @throws \Exception
      */
-    public  function fetchRow($sqlOrWhere = '',$params = []){
-        //没有sqlOrWhere或者为数组表示where条件
-        if(empty($sqlOrWhere) || is_array($sqlOrWhere)){
-            $this->where($sqlOrWhere,$params);
-            $this->sql = 'SELECT'.$this->container['field'].'FROM'.$this->container['table'].$this->container['where'].$this->container['order_by'].' LIMIT 1';
-            $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
-            $result = $this->db->selectOne($this->sql,$this->params);
-        }else{
-            if(is_array($sqlOrWhere)){
-                $this->where($sqlOrWhere,$params);
-            }else{
-                if (
-                    strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
-                    strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
-                    strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
-                ) {
-                    throw new \Exception('请使用execute');
-                }
-                $this->sqlParams[] = ['sql'=>$sqlOrWhere,'params'=>$params];
-                $result = $this->db->selectOne($sqlOrWhere,$params);
-            }
+    public function fetchRow($sqlOrWhere = [], $params = [], $fields = ''){
+        //异常传值
+        if ( is_string($sqlOrWhere) && (
+                strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
+                strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
+                strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
+            )) {
+            throw new \Exception('请使用execute');
         }
+        //sqlOrWhere是where条件如['id'=>1]   'id = :id'
+        if(is_array($sqlOrWhere) || strpos(trim(strtolower($sqlOrWhere)), 'select') !== 0){
+            $this->where($sqlOrWhere,$params);
+            //重置fields
+            if(is_array($sqlOrWhere) && !empty($params)) $this->field($params);
+            if(!empty($fields)) $this->field($fields);
+            $this->sql = 'SELECT'.$this->container['field'].'FROM'.$this->container['table'].$this->container['where'].$this->container['order_by'].' LIMIT 1';
+        }
+        //sqlOrWhere传的是完整sql语句，如select * from table where ...
+        if(is_string($sqlOrWhere) && strpos(trim(strtolower($sqlOrWhere)), 'select') === 0){
+            $this->sql = $sqlOrWhere;
+            $this->params = $params;
+        }
+        $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
+        $result = $this->db->selectOne($this->sql,$this->params);
         $this->resetParams();
         $result = $this->objectToArray($result);
         return $result;
@@ -318,34 +321,36 @@ class DbCore
      * author: panzhaochao
      * date: 2020-04-21 22:51
      *
-     * @param string $sqlOrWhere
+     * @param array $sqlOrWhere
      * @param array  $params
      *
      * @return array|bool|mixed
      * @throws \Exception
      */
-    public function fetchAll($sqlOrWhere='',$params=[]){
-        //没有sqlOrWhere或者为数组表示where条件
-        if(empty($sqlOrWhere) || is_array($sqlOrWhere)){
-            $this->where($sqlOrWhere,$params);
-            $this->sql = 'SELECT '.$this->container['field'].' FROM '.$this->container['table'].$this->container['where'].$this->container['order_by'].$this->container['limit'];
-            $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
-            $result = $this->execute($this->sql,$this->params);
-        }else{
-            if(is_array($sqlOrWhere)){
-                $this->where($sqlOrWhere,$params);
-            }else{
-                if (
-                    strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
-                    strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
-                    strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
-                ) {
-                    throw new \Exception('请使用execute');
-                }
-                $this->sqlParams[] = ['sql'=>$sqlOrWhere,'params'=>$params];
-                $result = $this->execute($sqlOrWhere,$params);
-            }
+    public function fetchAll($sqlOrWhere = [], $params = [], $fields = ''){
+        //异常传值
+        if ( is_string($sqlOrWhere) && (
+                strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
+                strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
+                strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
+            )) {
+            throw new \Exception('请使用execute');
         }
+        //sqlOrWhere是where条件如['id'=>1]   'id = :id'
+        if(is_array($sqlOrWhere) || strpos(trim(strtolower($sqlOrWhere)), 'select') !== 0){
+            $this->where($sqlOrWhere,$params);
+            //重置fields
+            if(is_array($sqlOrWhere) && !empty($params)) $this->field($params);
+            if(!empty($fields)) $this->field($fields);
+            $this->sql = 'SELECT '.$this->container['field'].' FROM '.$this->container['table'].$this->container['where'].$this->container['order_by'].$this->container['limit'];
+        }
+        //sqlOrWhere传的是完整sql语句，如select * from table where ...
+        if(is_string($sqlOrWhere) && strpos(trim(strtolower($sqlOrWhere)), 'select') === 0){
+            $this->sql = $sqlOrWhere;
+            $this->params = $params;
+        }
+        $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
+        $result = $this->execute($this->sql,$this->params);
         $this->resetParams();
         return $result;
     }
@@ -364,27 +369,29 @@ class DbCore
      * @throws \Exception
      */
     public function count($sqlOrWhere='',$params=[]){
-        //没有sqlOrWhere或者为数组表示where条件
-        if(empty($sqlOrWhere) || is_array($sqlOrWhere)){
-            $this->where($sqlOrWhere,$params);
-            $this->sql = 'SELECT count(*) FROM'.$this->container['table'].$this->container['where'].' LIMIT 1';
-            $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
-            $result = $this->db->selectOne($this->sql,$this->params);
-        }else{
-            if(is_array($sqlOrWhere)){
-                $this->where($sqlOrWhere,$params);
-            }else{
-                if (
-                    strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
-                    strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
-                    strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
-                ) {
-                    throw new \Exception('请使用execute');
-                }
-                $this->sqlParams[] = ['sql'=>$sqlOrWhere,'params'=>$params];
-                $result = $this->db->selectOne($sqlOrWhere,$params);
-            }
+        //异常传值
+        if ( is_string($sqlOrWhere) && (
+                strpos(trim(strtolower($sqlOrWhere)), 'insert') === 0 ||
+                strpos(trim(strtolower($sqlOrWhere)), 'update') === 0 ||
+                strpos(trim(strtolower($sqlOrWhere)), 'delete') === 0
+            )) {
+            throw new \Exception('请使用execute');
         }
+        //sqlOrWhere是where条件如['id'=>1]   'id = :id'
+        if(is_array($sqlOrWhere) || strpos(trim(strtolower($sqlOrWhere)), 'select') !== 0){
+            $this->where($sqlOrWhere,$params);
+            //重置fields
+            if(is_array($sqlOrWhere) && !empty($params)) $this->field($params);
+            if(!empty($fields)) $this->field($fields);
+            $this->sql = 'SELECT count(*) FROM'.$this->container['table'].$this->container['where'].' LIMIT 1';
+        }
+        //sqlOrWhere传的是完整sql语句，如select * from table where ...
+        if(is_string($sqlOrWhere) && strpos(trim(strtolower($sqlOrWhere)), 'select') === 0){
+            $this->sql = $sqlOrWhere;
+            $this->params = $params;
+        }
+        $this->sqlParams[] = ['sql'=>$this->sql,'params'=>$this->params];
+        $result = $this->db->selectOne($this->sql,$this->params);
         $this->resetParams();
         $result = $this->objectToArray($result);
         $result = array_pop($result);
