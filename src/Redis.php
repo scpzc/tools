@@ -29,7 +29,7 @@ namespace Scpzc\Tools;
  * @method static array  bitfield($key, $subcommand, ...$subcommandArg)
  * @method static int    decr($key, $decrement = 1,$expireSeconds = null)
  * @method static int    decrby($key, $decrement)
- * @method static string get($key)
+ * @method static mixed  get($key)
  * @method static int    getbit($key, $offset)
  * @method static string getrange($key, $start, $end)
  * @method static string getset($key, $value)
