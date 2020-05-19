@@ -71,7 +71,7 @@ class RedisCore
 
 
     /**
-     * 加锁
+     * 加锁（不存在才成功）
      *
      * @param string $key 缓存变量名
      * @param string $value 缓存数据
@@ -79,6 +79,7 @@ class RedisCore
      */
     public function setnx($key, $value, $expireSeconds = 3600*24)
     {
+        $value = (is_object($value) || is_array($value)) ? json_encode($value,JSON_UNESCAPED_UNICODE) : $value;
         if($expireSeconds === null){
             $result = $this->redis->setnx($key, $value);
         }else{
@@ -91,12 +92,12 @@ class RedisCore
      * string数据类型值加加操作,类似 ++$i ,如果 key 不存在时自动设置为 0 后进行加加操作
      *
      * @param string $key 缓存变量名
-     * @param int $offset 一次性加多少，默认1
+     * @param int $increment 一次性加多少，默认1
      * @return int
      */
-    public function incr($key, $offset = 1, $expireSeconds = 3600*24)
+    public function incr($key, $increment = 1, $expireSeconds = 3600*24)
     {
-        $result = $this->redis->incrby($key, $offset);
+        $result = $this->redis->incrby($key, $increment);
         if ($expireSeconds !== null) {
             $this->redis->expire($key, $expireSeconds);
         }
@@ -110,9 +111,9 @@ class RedisCore
      * @param int $offset 一次性减多少,默认1
      * @return int
      */
-    public function decr($key, $offset = 1, $expireSeconds = 3600*24)
+    public function decr($key, $increment = 1, $expireSeconds = 3600*24)
     {
-        $result = $this->redis->decrby($key, $offset);
+        $result = $this->redis->decrby($key, $increment);
         if ($expireSeconds !== null) {
             $this->redis->expire($key, $expireSeconds);
         }

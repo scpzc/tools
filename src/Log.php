@@ -6,9 +6,6 @@
 
 namespace Scpzc\Tools;
 
-use Scpzc\Tools\Db;
-
-
 class Log
 {
 
