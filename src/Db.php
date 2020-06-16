@@ -17,6 +17,7 @@ namespace Scpzc\Tools;
  * @method static mixed getSql()
  * @method static DbCore connect(string $connectName = null)
  * @method static DbCore table(string $query)
+ * @method static mixed execute($sql,$params = [])
  * @method static mixed startTrans()
  * @method static mixed commit()
  * @method static mixed rollBack()
