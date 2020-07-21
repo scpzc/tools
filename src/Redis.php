@@ -43,7 +43,7 @@ namespace Scpzc\Tools;
  * @method static mixed  set($key, $value,$expireSeconds = null)
  * @method static int    setbit($key, $offset, $value)
  * @method static int    setex($key, $seconds, $value)
- * @method static int    setnx($key, $value)
+ * @method static int    setnx($key, $value,$expireSeconds = null)
  * @method static int    setrange($key, $offset, $value)
  * @method static int    strlen($key)
  * @method static int    hdel($key, array $fields)
