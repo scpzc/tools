@@ -138,25 +138,25 @@ class DbCore
                                 $keysTemp = array_keys($whereItem[2]);
                                 $valuesTemp = array_values($whereItem[2]);
                                 $inArr = array_map(function($v) use ($whereItem,$count) {return ':'.$whereItem[0].$count.'_'.$v;}, $keysTemp);
-                                $whereTemp[] = $whereItem[0].' '.$sign.' ('.join(',',$inArr).')';
+                                $whereTemp[] = '`'.$whereItem[0].'` '.$sign.' ('.join(',',$inArr).')';
                                 $this->params = array_merge($this->params,array_combine($inArr,$valuesTemp));
                             }else{
-                                $whereTemp[] = $whereItem[0].' '.$sign.' ( null )';
+                                $whereTemp[] = '`'.$whereItem[0].'` '.$sign.' ( null )';
                             }
                         }else{   //[['id','>','121']]等
-                            $whereTemp[] = $whereItem[0].' '.$sign.' '.':'.$whereItem[0].$count;
+                            $whereTemp[] = '`'.$whereItem[0].'` '.$sign.' '.':'.$whereItem[0].$count;
                             $this->params[$whereItem[0].$count] = $whereItem[2];
                         }
                     }elseif($whereCount == 1){
                         foreach($whereItem as $key2=>$whereItem2){      //[['id'=>1]]
-                            $whereTemp[] = $key2.' = :'.$key2.$count;
+                            $whereTemp[] = '`'.$key2.'` = :'.$key2.$count;
                             $this->params[$key2.$count] = $whereItem2;
                         }
                     }else{
                         throw new \Exception('where的写法有误');
                     }
                 }else{     //['id'=>1]
-                    $whereTemp[] = $key.' = :'.$key.$count;
+                    $whereTemp[] = '`'.$key.'` = :'.$key.$count;
                     $this->params[$key.$count] = $whereItem;
                 }
                 $count++;
@@ -228,24 +228,24 @@ class DbCore
                 $count = count($val);
                 if($count == 3){   // [['ver','incr',1]]
                     if($val[1] == 'incr'){   // [['ver','incr',1]]
-                        $set[] = $val[0].'='.$val[0].'+:data_'.$key.'_'.$val[0];
+                        $set[] = '`'.$val[0].'`='.$val[0].'+:data_'.$key.'_'.$val[0];
                         $this->params['data_'.$key.'_'.$val[0]] = $val[2];
                     }elseif($val[1] == 'decr'){   // [['ver','decr',1]]
-                        $set[] = $val[0].'='.$val[0].'-:data_'.$key.'_'.$val[0];
+                        $set[] = '`'.$val[0].'`='.$val[0].'-:data_'.$key.'_'.$val[0];
                         $this->params['data_'.$key.'_'.$val[0]] = $val[2];
                     }
                 }elseif($count == 1){   //[['ver'=>1]]
                     $keysArr = array_keys($val);
                     $field = array_pop($keysArr);
                     $val = array_pop($val);
-                    $set[] = $field.'=:'.'data_'.$field;
+                    $set[] = '`'.$field.'`=:'.'data_'.$field;
                     $insertFields[] = $field;
                     $this->params['data_'.$field] = $val;
                 }else{
                     throw new \Exception('data格式错误1');
                 }
             }else{
-                $set[] = $key.'=:'.'data_'.$key;
+                $set[] = '`'.$key.'` = :'.'data_'.$key;
                 $insertFields[] = $key;
                 $this->params['data_'.$key] = $val;
             }
@@ -465,6 +465,7 @@ class DbCore
         $this->data($data);
         $this->where($where,$params);
         if(empty($this->container['where'])){
+
             return 0;
         }
         try{
