@@ -100,8 +100,12 @@ class DbCore
      * @return $this
      */
     public function field($field = ' * '){
+        if(is_string($field)){
+            $field = explode(',',$field);
+        }
+        $field = array_map('trim',$field);
         if(is_array($field) && !empty($field)){
-            $field = ' '.join(',',$field).' ';
+            $field = ' `'.join('`,`',$field).'` ';
         }
         $field = !empty($field) ? $field : '*';
         $this->container['field'] = ' '.$field.' ';
