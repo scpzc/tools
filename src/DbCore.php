@@ -519,14 +519,21 @@ class DbCore
 
 
 
-
-
     /**
      * 查询执行的SQL和参数
      * author: panzhaochao
      * date: 2019/5/22 9:59
      */
     public function getSql(){
+        foreach($this->sqlParams as $key=>$item){
+            $sqlParams = $item['sql'];
+            if(!empty($item['params'])){
+                foreach($item['params'] as $paramKey=>$paramValue){
+                    $sqlParams = str_replace(':'.$paramKey,"'".$paramValue."'",$sqlParams);
+                }
+            }
+            $this->sqlParams[$key]['sql_params'] = $sqlParams;
+        }
         return $this->sqlParams;
     }
 
