@@ -511,7 +511,7 @@ class DbCore
                 $result = $this->db->delete($sql, $params);
                 break;
             default:
-                $result = false;
+                $result = $this->db->statement($sql, $params);
                 break;
         }
         return $result;
