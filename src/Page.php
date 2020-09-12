@@ -35,6 +35,7 @@ class Page
                 'page'       => intval($this->page),
                 'page_size'  => $this->pageSize,
                 'total_page' => $this->totalPage,
+                'total_record'=>$this->totalRecord,
             ];
         }
         return $data??null;
