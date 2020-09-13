@@ -88,17 +88,23 @@ class Redis
 
 
 
+
     /**
      * 加锁，不存在才成功
+     * author: panzhaochao
+     * date: 2020-09-14 0:02
      *
-     * @param string $key 缓存变量名
-     * @param string $value 缓存数据
+     * @param     $key
+     * @param int $expireSeconds
+     *
      * @return mixed
      */
     private function lock($key, $expireSeconds = 10)
     {
         return self::setnx($key,1,$expireSeconds);
     }
+
+
 
     /**
      * 设置值，不存在才成功
