@@ -1,9 +1,9 @@
 <?php
+
 /**
  * 数据库操作工具类，只能在Laravel中使用
- * Created by PhpStorm.
- * Date: 2019/10/26
- * Time: 15:55
+ * author: panzhaochao
+ * date: 2019-05-21 11:53
  */
 
 namespace Scpzc\Tools;
