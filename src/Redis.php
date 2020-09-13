@@ -88,9 +88,20 @@ class Redis
 
 
 
+    /**
+     * 加锁，不存在才成功
+     *
+     * @param string $key 缓存变量名
+     * @param string $value 缓存数据
+     * @return mixed
+     */
+    private function lock($key, $expireSeconds = 10)
+    {
+        return self::setnx($key,1,$expireSeconds);
+    }
 
     /**
-     * 加锁（不存在才成功）
+     * 设置值，不存在才成功
      *
      * @param string $key 缓存变量名
      * @param string $value 缓存数据
