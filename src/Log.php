@@ -29,7 +29,7 @@ class Log
 
         $logPath = base_path().'/storage/logs/';
         $logPath .= $folderName;
-        if(!is_dir($logPath)) mkdir($logPath, 0644, true);
+        if(!is_dir($logPath)) mkdir($logPath, 0755, true);
 
         $logFile = $logPath . '/'.date('Y-m-d').'.log';
 
