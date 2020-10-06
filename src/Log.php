@@ -36,6 +36,7 @@ class Log
         // 日志记录路径
         $logContent = '----LOG START----'.PHP_EOL;
         $logContent .= 'DATE:' . date("Y-m-d H:i:s") . PHP_EOL;
+        $logContent .= 'ENV:'.config('app.env', ''). PHP_EOL;
         $logContent .= 'FILE:' . $backtrace[0]['file'] .' LINE:' . $backtrace[0]['line'] . PHP_EOL;
         $logContent .= 'CONTENT:' . $content . PHP_EOL;
         $logContent .= '-----LOG END-----'.PHP_EOL;
