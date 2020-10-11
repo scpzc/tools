@@ -354,19 +354,20 @@ class Db
      * @throws \Exception
      */
     private function selectOperate($selectType, $sqlOrWhere, $params = [], $fields = ''){
-        if(is_string($sqlOrWhere)) $sqlOrWhere = trim(strtolower($sqlOrWhere));
+        $sqlLower = '';
+        if(is_string($sqlOrWhere)) $sqlLower = trim(strtolower($sqlOrWhere));
         //异常传值
         if (is_string($sqlOrWhere) && (
-                strpos($sqlOrWhere, 'insert') === 0 ||
-                strpos($sqlOrWhere, 'update') === 0 ||
-                strpos($sqlOrWhere, 'delete') === 0
+                strpos($sqlLower, 'insert') === 0 ||
+                strpos($sqlLower, 'update') === 0 ||
+                strpos($sqlLower, 'delete') === 0
             )) {
             throw new \Exception('请使用execute');
         }
         //sqlOrWhere传的是原生sql语句，如select * from table where ... 、 show tables ...
         if(is_string($sqlOrWhere) && (
-                strpos($sqlOrWhere, 'select') === 0 ||
-                strpos($sqlOrWhere, 'show') === 0
+                strpos($sqlLower, 'select') === 0 ||
+                strpos($sqlLower, 'show') === 0
             )) {
                 $this->sql    = $sqlOrWhere;
                 $this->params = $params;
