@@ -139,8 +139,8 @@ class Db
                             if(!empty($whereItem[2])){
                                 $keysTemp = array_keys($whereItem[2]);
                                 $valuesTemp = array_values($whereItem[2]);
-                                $inArr = array_map(function($v) use ($whereItem,$count) {return ':'.$whereItem[0].$count.'_'.$v;}, $keysTemp);
-                                $whereTemp[] = '`'.$whereItem[0].'` '.$sign.' ('.join(',',$inArr).')';
+                                $inArr = array_map(function($v) use ($whereItem,$count) {return $whereItem[0].$count.'_'.$v;}, $keysTemp);
+                                $whereTemp[] = '`'.$whereItem[0].'` '.$sign.' (:'.join(',:',$inArr).')';
                                 $this->params = array_merge($this->params,array_combine($inArr,$valuesTemp));
                             }else{
                                 $whereTemp[] = '`'.$whereItem[0].'` '.$sign.' ( null )';
@@ -354,20 +354,19 @@ class Db
      * @throws \Exception
      */
     private function selectOperate($selectType, $sqlOrWhere, $params = [], $fields = ''){
-        $sqlLower = '';
-        if(is_string($sqlOrWhere)) $sqlLower = trim(strtolower($sqlOrWhere));
+        if(is_string($sqlOrWhere)) $sqlOrWhere = trim(strtolower($sqlOrWhere));
         //异常传值
         if (is_string($sqlOrWhere) && (
-                strpos($sqlLower, 'insert') === 0 ||
-                strpos($sqlLower, 'update') === 0 ||
-                strpos($sqlLower, 'delete') === 0
+                strpos($sqlOrWhere, 'insert') === 0 ||
+                strpos($sqlOrWhere, 'update') === 0 ||
+                strpos($sqlOrWhere, 'delete') === 0
             )) {
             throw new \Exception('请使用execute');
         }
         //sqlOrWhere传的是原生sql语句，如select * from table where ... 、 show tables ...
         if(is_string($sqlOrWhere) && (
-                strpos($sqlLower, 'select') === 0 ||
-                strpos($sqlLower, 'show') === 0
+                strpos($sqlOrWhere, 'select') === 0 ||
+                strpos($sqlOrWhere, 'show') === 0
             )) {
                 $this->sql    = $sqlOrWhere;
                 $this->params = $params;
