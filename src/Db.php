@@ -12,6 +12,9 @@ use Scpzc\Tools\Core\DbCore;
 
 /**
  * @method static  DbCore table(string $table)  要操作的数据表
+ * @method static  DbCore fetchRow($sqlOrWhere = [], $params = [], $fields = '') 查询一条记录，可以使用原生
+ * @method static  DbCore fetchAll($sqlOrWhere = [], $params = [], $fields = '') 查询符合条件的所有记录，可以使用原生
+ * @method static  DbCore fetchOne($sqlOrWhere = [], $params = [], $fields = '') 获取单个值，可以使用原生
  * @method static  DbCore startTrans() 开始事务
  * @method static  DbCore commit() 提交事务
  * @method static  DbCore rollBack()  回滚事务
