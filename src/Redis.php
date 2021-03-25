@@ -13,6 +13,7 @@ use Scpzc\Tools\Core\RedisCore;
  * @method static  RedisCore get(string $key)  获取string数据类型缓存
  * @method static  RedisCore set($key, $value, $expireSeconds)  设置string类型缓存
  * @method static  RedisCore setnx($key, $value, $expireSeconds)  设置值，不存在才成功
+ * @method static  RedisCore lock($key, $value)  加锁，不存在才成功
  * @method static  RedisCore incr($key, $increment = 1, $expireSeconds = 3600*24)  string数据类型值加加操作,类似 ++$i ,如果 key 不存在时自动设置为 0 后进行加加操作
  * @method static  RedisCore decr($key, $increment = 1, $expireSeconds = 3600*24)  string数据类型值减减操作,类似 --$i ,如果 key 不存在时自动设置为 0 后进行减减操作
  */
