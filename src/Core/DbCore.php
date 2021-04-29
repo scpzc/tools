@@ -12,13 +12,14 @@ class DbCore
 {
 
     private $container = [
-        'table' => null,  //要查询的表
-        'field' => ' * ',   //查询的字段
-        'where' => '',    //查询条件
-        'limit' => '',    //查询限制
+        'table'       => null,  //要查询的表
+        'field'       => ' * ',   //查询的字段
+        'where'       => '',    //查询条件
+        'limit'       => '',    //查询限制
         'update_data' => '',//更新数据
         'insert_data' => '',//插入数据
-        'order_by' => '',   //排序
+        'order_by'    => '',   //排序
+        'lock'        => 0,  //是否加悲观锁
     ];
     private $sql = '';//执行sql语句
     private $params = [];//绑定的参数
@@ -61,6 +62,21 @@ class DbCore
         $this->container['table'] = ' `'.$table.'` ';
         return $this;
     }
+
+    /**
+     * 是否加悲观锁
+     * author: panzhaochao
+     * date: 2019/5/21 21:13
+     *
+     * @param $lock
+     *
+     * @return $this
+     */
+    public function lock($lock = 1){
+        $this->container['lock'] = $lock;
+        return $this;
+    }
+
 
     /**
      * 设置要查询的字段
@@ -347,9 +363,9 @@ class DbCore
             if(is_array($sqlOrWhere) && !empty($params)) $this->field($params);
             if(!empty($fields)) $this->field($fields);
             if($selectType == 'fetchAll'){
-                $this->sql = 'SELECT '.$this->container['field'].' FROM '.$this->container['table'].$this->container['where'].$this->container['order_by'].$this->container['limit'];
+                $this->sql = 'SELECT '.$this->container['field'].' FROM '.$this->container['table'].$this->container['where'].$this->container['order_by'].$this->container['limit'].($this->container['lock'] == 1?' FOR UPDATE':'');
             }elseif($selectType == 'fetchRow'){
-                $this->sql = 'SELECT '.$this->container['field'].' FROM '.$this->container['table'].$this->container['where'].$this->container['order_by'].' LIMIT 1';
+                $this->sql = 'SELECT '.$this->container['field'].' FROM '.$this->container['table'].$this->container['where'].$this->container['order_by'].' LIMIT 1'.($this->container['lock'] == 1?' FOR UPDATE':'');
             }elseif($selectType == 'count'){
                 $this->sql = 'SELECT count(*) FROM '.$this->container['table'].$this->container['where'].' LIMIT 1';
             }
