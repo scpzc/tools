@@ -44,6 +44,7 @@ class DbCore
             'update_data' => '',//更新数据
             'insert_data' => '',//插入数据
             'order_by'    => '',   //排序
+            'lock'        => 0,//是否加悲观锁
         ];
         $this->params = [];
     }
