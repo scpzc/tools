@@ -423,7 +423,7 @@ class DbCore
         }catch(\Throwable $e){
             handleException($e);   //写入错误日志表
             report($e);   //写入日志文件
-            $result = 0;
+            $result = false;
         }
         $this->resetParams();
         return $result;
@@ -453,7 +453,7 @@ class DbCore
         }catch(\Throwable $e){
             handleException($e);   //写入错误日志表
             report($e);   //写入日志文件
-            $result = 0;
+            $result = false;
         }
         $this->resetParams();
         return $result;
