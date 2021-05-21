@@ -223,17 +223,17 @@ class DbCore
                         $set[] = '`'.$val[0].'`='.$val[0].'-:data_'.$key.'_'.$val[0];
                         $this->params['data_'.$key.'_'.$val[0]] = $val[2];
                     }
-                }elseif($count == 1){   //[['ver'=>1]]
-                    $keysArr = array_keys($val);
-                    $field = array_pop($keysArr);
-                    $val = array_pop($val);
-                    $set[] = '`'.$field.'`=:'.'data_'.$field;
-                    $insertFields[] = $field;
-                    $this->params['data_'.$field] = $val;
+                }elseif($count == 2){
+                    if($val[0] == 'incr'){   // ['ver'=>['incr',1]]
+                        $set[] = '`'.$key.'`='.$key.'+:data_'.$key;
+                    }elseif($val[0] == 'decr'){   // ['ver'=>['incr',1]]
+                        $set[] = '`'.$key.'`='.$key.'-:data_'.$key;
+                    }
+                    $this->params['data_'.$key] = $val[1];
                 }else{
                     throw new \Exception('data格式错误1');
                 }
-            }else{
+            }else{   //字符串    ['age'=>20]
                 $set[] = '`'.$key.'` = :'.'data_'.$key;
                 $insertFields[] = $key;
                 $this->params['data_'.$key] = $val;
