@@ -11,15 +11,15 @@ use Scpzc\Tools\Core\DbCore;
 
 
 /**
- * @method static  DbCore table(string $table)  要操作的数据表
- * @method static  DbCore fetchRow($sqlOrWhere = [], $params = [], $fields = '') 查询一条记录，可以使用原生
- * @method static  DbCore fetchAll($sqlOrWhere = [], $params = [], $fields = '') 查询符合条件的所有记录，可以使用原生
- * @method static  DbCore fetchOne($sqlOrWhere = [], $params = [], $fields = '') 获取单个值，可以使用原生
- * @method static  DbCore execute(string $sql = null, array $params = []) 执行原生SQL
- * @method static  DbCore startTrans() 开始事务
- * @method static  DbCore commit() 提交事务
- * @method static  DbCore rollBack()  回滚事务
- * @method static  DbCore getSql()  查询执行的SQL和参数
+ * @method static  table(string $table)  要操作的数据表
+ * @method static  fetchRow($sqlOrWhere = [], $params = [], $fields = '') 查询一条记录，可以使用原生
+ * @method static  array fetchAll($sqlOrWhere = [], $params = [], $fields = '') 查询符合条件的所有记录，可以使用原生
+ * @method static  fetchOne($sqlOrWhere = [], $params = [], $fields = '') 获取单个值，可以使用原生
+ * @method static  execute(string $sql = null, array $params = []) 执行原生SQL
+ * @method static  startTrans() 开始事务
+ * @method static  commit() 提交事务
+ * @method static  rollBack()  回滚事务
+ * @method static  getSql()  查询执行的SQL和参数
  */
 
 class Db
